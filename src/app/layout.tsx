@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://washai-pos.vercel.app", // Placeholder for actual deployment
+    url: "https://wash-ai.vercel.app/",
     title: "WashAI | Premium Laundry POS",
     description: "Enterprise-grade AI-powered Laundry Point of Sale management system.",
     siteName: "WashAI",

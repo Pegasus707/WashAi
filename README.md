@@ -2,6 +2,8 @@
 
 WashAI is an enterprise-grade, AI-powered Point of Sale (POS) system designed for modern laundry businesses. Built with a focus on speed, precision, and a "Pitch Black" premium aesthetic, WashAI streamlines order intake, customer management, and logistics tracking.
 
+**🔗 [Live Demo](https://wash-ai.vercel.app/)**
+
 ![WashAI Preview](https://raw.githubusercontent.com/Pegasus707/WashAi/main/public/preview.png) *(Note: Add your actual screenshot here later)*
 
 ## ✨ Key Features
