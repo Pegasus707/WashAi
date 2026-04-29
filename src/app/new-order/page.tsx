@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Send, CheckCircle2, Plus, Loader2, User, Trash2, Shirt, Scissors, Waves, Home, Zap, CreditCard, Banknote, Smartphone, Mic, Receipt, Calculator, Edit2 } from "lucide-react";
 import { useStore, Order } from "@/store/useStore";
@@ -63,7 +63,7 @@ const INVENTORY_CATEGORIES = [
 
 const ALL_ITEMS = INVENTORY_CATEGORIES.flatMap(cat => cat.items);
 
-export default function NewOrder() {
+function NewOrderContent() {
   const addOrder = useStore((state) => state.addOrder);
   const updateOrder = useStore((state) => state.updateOrder);
   const allOrders = useStore((state) => state.orders);
@@ -666,6 +666,18 @@ export default function NewOrder() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function NewOrder() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-[60vh] w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <NewOrderContent />
+    </Suspense>
   );
 }
 
