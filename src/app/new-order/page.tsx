@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Send, CheckCircle2, Plus, Loader2, User, Trash2, Shirt, Scissors, Waves, Home, Zap, CreditCard, Banknote, Smartphone, Mic, Receipt, Calculator } from "lucide-react";
+import { Sparkles, Send, CheckCircle2, Plus, Loader2, User, Trash2, Shirt, Scissors, Waves, Home, Zap, CreditCard, Banknote, Smartphone, Mic, Receipt, Calculator, Edit2 } from "lucide-react";
 import { useStore, Order } from "@/store/useStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/currency";
 import confetti from "canvas-confetti";
@@ -65,26 +65,53 @@ const INVENTORY_CATEGORIES = [
 const ALL_ITEMS = INVENTORY_CATEGORIES.flatMap(cat => cat.items);
 
 export default function NewOrder() {
-  const [mode, setMode] = useState<OrderMode>("manual");
   const addOrder = useStore((state) => state.addOrder);
+  const updateOrder = useStore((state) => state.updateOrder);
+  const allOrders = useStore((state) => state.orders);
   const currency = useStore((state) => state.settings.currency);
   const taxRate = useStore((state) => state.settings.taxRate) / 100;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditMode = !!editId;
 
-  // --- Common State ---
+  const [mode, setMode] = useState<OrderMode>(isEditMode ? "manual" : "ai");
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'UPI' | 'Card'>('Cash');
   const [isExpress, setIsExpress] = useState(false);
-
-  // --- AI Mode State ---
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [parsedOrder, setParsedOrder] = useState<any>(null);
   const [isListening, setIsListening] = useState(false);
-
-  // --- Manual Mode State ---
+  const [parsedOrder, setParsedOrder] = useState<any>(null);
+  
+  // Manual State
   const [manualCustomer, setManualCustomer] = useState("");
   const [manualItems, setManualItems] = useState<{ itemId: string, quantity: number }[]>([]);
   const [activeCategory, setActiveCategory] = useState(INVENTORY_CATEGORIES[0].name);
+
+  // Load order data if in Edit Mode
+  useEffect(() => {
+    if (isEditMode && allOrders.length > 0) {
+      const existingOrder = allOrders.find(o => o.id === editId);
+      if (existingOrder) {
+        setManualCustomer(existingOrder.customer);
+        setPaymentMethod(existingOrder.paymentMethod);
+        setIsExpress(existingOrder.services.some(s => s.name === "Express Delivery"));
+        
+        // Map order items back to inventory IDs
+        const ALL_ITEMS = INVENTORY_CATEGORIES.flatMap(c => c.items);
+        const mappedItems = existingOrder.items.map(item => {
+          const invItem = ALL_ITEMS.find(i => i.name === item.name);
+          return { itemId: invItem?.id || "", quantity: item.quantity };
+        }).filter(i => i.itemId !== "");
+        
+        setManualItems(mappedItems);
+        toast.info(`Editing Order ${editId}`, { 
+          description: "Updating existing records.",
+          icon: <Edit2 className="h-4 w-4" />
+        });
+      }
+    }
+  }, [isEditMode, editId, allOrders]);
 
   // --- AI Logic (WashAI v2.3) ---
   const parseInput = (text: string) => {
@@ -159,19 +186,30 @@ export default function NewOrder() {
   };
 
   const confirmOrderAI = () => {
-    const newOrder: Order = {
-      id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
-      customer: "Walk-in Customer",
+    const orderData = {
       items: parsedOrder.items,
       services: parsedOrder.services,
       subtotal: parsedOrder.subtotal,
       tax: parsedOrder.tax,
       total: parsedOrder.total,
-      status: "Received",
       paymentMethod,
-      time: "Just now"
     };
-    addOrder(newOrder);
+
+    if (isEditMode) {
+      updateOrder(editId!, orderData);
+      toast.success("Order updated successfully!");
+    } else {
+      const newOrder: Order = {
+        id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+        customer: "Walk-in Customer",
+        ...orderData,
+        status: "Received",
+        time: "Just now"
+      };
+      addOrder(newOrder);
+      toast.success("Order confirmed successfully!");
+    }
+    
     hapticFeedback('success');
     confetti({
       particleCount: 150,
@@ -179,7 +217,7 @@ export default function NewOrder() {
       origin: { y: 0.6 },
       colors: ['#ffffff', '#3b82f6', '#000000']
     });
-    toast.success("Order confirmed successfully!");
+
     setTimeout(() => {
       router.push("/orders");
     }, 1500);
@@ -245,20 +283,30 @@ export default function NewOrder() {
       return;
     }
 
-    const newOrder: Order = {
-      id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+    const orderData = {
       customer: manualCustomer,
       items: manualOrderTotals.items,
       services: manualOrderTotals.services,
       subtotal: manualOrderTotals.subtotal,
       tax: manualOrderTotals.tax,
       total: manualOrderTotals.total,
-      status: "Received",
       paymentMethod,
-      time: "Just now"
     };
 
-    addOrder(newOrder);
+    if (isEditMode) {
+      updateOrder(editId!, orderData);
+      toast.success("Order updated successfully!");
+    } else {
+      const newOrder: Order = {
+        id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+        ...orderData,
+        status: "Received",
+        time: "Just now"
+      };
+      addOrder(newOrder);
+      toast.success("Order confirmed successfully!");
+    }
+
     hapticFeedback('success');
     confetti({
       particleCount: 150,
@@ -266,7 +314,7 @@ export default function NewOrder() {
       origin: { y: 0.6 },
       colors: ['#ffffff', '#3b82f6', '#000000']
     });
-    toast.success("Order confirmed successfully!");
+    
     setTimeout(() => {
       router.push("/orders");
     }, 1500);
@@ -277,26 +325,32 @@ export default function NewOrder() {
       {/* Header & Mode Toggle */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-border/50 pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Checkout</h1>
-          <p className="text-muted-foreground text-sm">Process a new client order manually or via WashAI intelligence.</p>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">
+            {isEditMode ? `Edit Order #${editId}` : "Checkout"}
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            {isEditMode ? "Modify order items and customer details." : "Process a new client order manually or via WashAI intelligence."}
+          </p>
         </div>
-
-        <div className="flex bg-background border border-border p-1 rounded-xl">
-          <button
-            onClick={() => setMode("manual")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${mode === "manual" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
-              }`}
-          >
-            <Calculator className="h-4 w-4" /> Manual Entry
-          </button>
-          <button
-            onClick={() => setMode("ai")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${mode === "ai" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"
-              }`}
-          >
-            <Sparkles className="h-4 w-4" /> WashAI
-          </button>
-        </div>
+        
+        {!isEditMode && (
+          <div className="flex bg-background border border-border p-1 rounded-xl">
+            <button
+              onClick={() => setMode("manual")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${mode === "manual" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <Calculator className="h-4 w-4" /> Manual Entry
+            </button>
+            <button
+              onClick={() => setMode("ai")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${mode === "ai" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <Sparkles className="h-4 w-4" /> WashAI
+            </button>
+          </div>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
@@ -617,7 +671,7 @@ export default function NewOrder() {
                     onClick={confirmOrderManual}
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-black py-4 rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer uppercase tracking-widest text-xs"
                   >
-                    Place Order
+                    {isEditMode ? "Save Changes" : "Place Order"}
                   </button>
                 </div>
               </div>

@@ -83,6 +83,7 @@ interface StoreState {
   updateSettings: (settings: Partial<AppSettings>) => void;
   updateDeliveryStatus: (id: string, status: DeliveryStatus) => void;
   assignDriver: (deliveryId: string, driverId: string) => void;
+  updateOrder: (id: string, updatedOrder: Partial<Order>) => void;
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
@@ -211,6 +212,9 @@ export const useStore = create<StoreState>((set) => ({
       })
     };
   }),
+  updateOrder: (id, updatedOrder) => set((state) => ({
+    orders: state.orders.map((o) => o.id === id ? { ...o, ...updatedOrder } : o)
+  })),
   isSidebarOpen: false,
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setSidebarOpen: (open) => set({ isSidebarOpen: open })

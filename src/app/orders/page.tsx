@@ -50,6 +50,8 @@ export default function Orders() {
     setActiveDropdown(null);
     if (action === 'invoice') {
       setInvoiceOrder(order);
+    } else if (action === 'edit') {
+      router.push(`/new-order?edit=${order.id}`);
     } else if (action === 'print') {
       setInvoiceOrder(order);
       setTimeout(() => {
@@ -197,6 +199,12 @@ export default function Orders() {
                           exit={{ opacity: 0, scale: 0.95, y: -10 }}
                           className="absolute right-8 top-8 w-48 bg-[#0A0A0A] border border-border rounded-xl shadow-2xl z-[999] overflow-hidden py-1"
                         >
+                          <button 
+                            onClick={() => handleAction('edit', order)}
+                            className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
+                          >
+                            <Edit2 className="h-4 w-4" /> Edit Order
+                          </button>
                           <button 
                             onClick={() => handleAction('invoice', order)}
                             className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
