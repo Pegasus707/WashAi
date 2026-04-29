@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/currency";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const chartDataSets = {
   "This Week": [
@@ -51,6 +52,38 @@ const chartDataSets = {
   ],
 };
 
+const DashboardSkeleton = () => (
+  <div className="flex flex-col gap-6 w-full pb-8">
+    <div className="flex justify-between items-start">
+      <div className="space-y-2">
+        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+      <div className="flex flex-col items-end gap-2">
+        <Skeleton className="h-8 w-32" />
+        <Skeleton className="h-4 w-24" />
+      </div>
+    </div>
+    <div className="flex gap-2">
+      <Skeleton className="h-10 w-28" />
+      <Skeleton className="h-10 w-32" />
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {[...Array(4)].map((_, i) => (
+        <Skeleton key={i} className="h-32 w-full rounded-xl" />
+      ))}
+    </div>
+    <Skeleton className="h-24 w-full rounded-2xl" />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+      <Skeleton className="lg:col-span-2 h-[400px] rounded-xl" />
+      <div className="flex flex-col gap-6">
+        <Skeleton className="h-48 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl" />
+      </div>
+    </div>
+  </div>
+);
+
 export default function Dashboard() {
   const orders = useStore((state) => state.orders);
   const customers = useStore((state) => state.customers);
@@ -61,9 +94,13 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
+    // Artificial delay to show skeleton (optional, but good for demo)
+    const timeout = setTimeout(() => setMounted(true), 1500);
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(timer);
+    };
   }, []);
 
   const totalRevenue = useMemo(() => orders.reduce((sum, o) => sum + o.total, 0), [orders]);
@@ -75,7 +112,7 @@ export default function Dashboard() {
   const revenueGoal = 250000;
   const goalProgress = Math.min(100, (totalRevenue / revenueGoal) * 100);
 
-  if (!mounted) return null;
+  if (!mounted) return <DashboardSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 w-full pb-8">

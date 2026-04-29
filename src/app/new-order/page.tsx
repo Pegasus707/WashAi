@@ -7,6 +7,8 @@ import { useStore, Order } from "@/store/useStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/currency";
+import confetti from "canvas-confetti";
+import { hapticFeedback } from "@/lib/utils";
 
 type OrderMode = "ai" | "manual";
 
@@ -170,14 +172,22 @@ export default function NewOrder() {
       time: "Just now"
     };
     addOrder(newOrder);
+    hapticFeedback('success');
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ffffff', '#3b82f6', '#000000']
+    });
     toast.success("Order confirmed successfully!");
     setTimeout(() => {
       router.push("/orders");
-    }, 1000);
+    }, 1500);
   };
 
   // --- Manual Logic ---
   const handleAddItem = (itemId: string) => {
+    hapticFeedback('light');
     const existing = manualItems.find(i => i.itemId === itemId);
     if (existing) {
       setManualItems(manualItems.map(i => i.itemId === itemId ? { ...i, quantity: i.quantity + 1 } : i));
@@ -249,10 +259,17 @@ export default function NewOrder() {
     };
 
     addOrder(newOrder);
+    hapticFeedback('success');
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ffffff', '#3b82f6', '#000000']
+    });
     toast.success("Order confirmed successfully!");
     setTimeout(() => {
       router.push("/orders");
-    }, 1000);
+    }, 1500);
   };
 
   return (
