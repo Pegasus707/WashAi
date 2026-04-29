@@ -237,9 +237,6 @@ export default function Orders() {
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
               {filteredOrders.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-muted-foreground">
@@ -254,112 +251,115 @@ export default function Orders() {
 
       {/* Invoice Modal */}
       <AnimatePresence>
-        {invoiceOrder && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
-              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-              onClick={() => setInvoiceOrder(null)}
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg glass-panel p-0 rounded-2xl shadow-2xl border border-border overflow-hidden"
-            >
-              <div className="p-8 bg-white text-black min-h-[600px] flex flex-col">
-                <div className="flex justify-between items-start mb-8">
-                  <div>
-                    <h2 className="text-2xl font-black italic tracking-tighter mb-1">WASH AI</h2>
-                    <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Premium Laundry POS</p>
+        {invoiceOrder && (() => {
+          const order = invoiceOrder;
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+                onClick={() => setInvoiceOrder(null)}
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-lg glass-panel p-0 rounded-2xl shadow-2xl border border-border overflow-hidden"
+              >
+                <div className="p-8 bg-white text-black min-h-[600px] flex flex-col">
+                  <div className="flex justify-between items-start mb-8">
+                    <div>
+                      <h2 className="text-2xl font-black italic tracking-tighter mb-1">WASH AI</h2>
+                      <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Premium Laundry POS</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold">INVOICE</p>
+                      <p className="text-xs text-zinc-500">{order.id}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold">INVOICE</p>
-                    <p className="text-xs text-zinc-500">{invoiceOrder.id}</p>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-8 mb-8">
-                  <div>
-                    <p className="text-[10px] text-zinc-400 uppercase font-bold mb-2">Billed To</p>
-                    <p className="text-sm font-bold">{invoiceOrder.customer}</p>
-                    <p className="text-xs text-zinc-500 italic">Walk-in Customer</p>
+                  <div className="grid grid-cols-2 gap-8 mb-8">
+                    <div>
+                      <p className="text-[10px] text-zinc-400 uppercase font-bold mb-2">Billed To</p>
+                      <p className="text-sm font-bold">{order.customer}</p>
+                      <p className="text-xs text-zinc-500 italic">Walk-in Customer</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-zinc-400 uppercase font-bold mb-2">Date</p>
+                      <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] text-zinc-400 uppercase font-bold mb-2">Date</p>
-                    <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
-                  </div>
-                </div>
 
-                <div className="flex-1">
-                  <table className="w-full text-left text-sm mb-8">
-                    <thead>
-                      <tr className="border-b-2 border-black text-[10px] uppercase font-black">
-                        <th className="py-2">Description</th>
-                        <th className="py-2 text-center">Qty</th>
-                        <th className="py-2 text-right">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoiceOrder.items.map((item, i) => (
-                        <tr key={i} className="border-b border-zinc-100">
-                          <td className="py-3 font-medium">{item.name}</td>
-                          <td className="py-3 text-center">{item.quantity}</td>
-                          <td className="py-3 text-right">{formatCurrency(item.total, currency)}</td>
+                  <div className="flex-1">
+                    <table className="w-full text-left text-sm mb-8">
+                      <thead>
+                        <tr className="border-b-2 border-black text-[10px] uppercase font-black">
+                          <th className="py-2">Description</th>
+                          <th className="py-2 text-center">Qty</th>
+                          <th className="py-2 text-right">Amount</th>
                         </tr>
-                      ))}
-                      {invoiceOrder.services.map((svc, i) => (
-                        <tr key={`svc-${i}`} className="border-b border-zinc-100">
-                          <td className="py-3 font-medium text-primary-dark">{svc.name}</td>
-                          <td className="py-3 text-center">1</td>
-                          <td className="py-3 text-right">{formatCurrency(svc.price, currency)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {order.items.map((item, i) => (
+                          <tr key={i} className="border-b border-zinc-100">
+                            <td className="py-3 font-medium">{item.name}</td>
+                            <td className="py-3 text-center">{item.quantity}</td>
+                            <td className="py-3 text-right">{formatCurrency(item.total, currency)}</td>
+                          </tr>
+                        ))}
+                        {order.services.map((svc, i) => (
+                          <tr key={`svc-${i}`} className="border-b border-zinc-100">
+                            <td className="py-3 font-medium">{svc.name}</td>
+                            <td className="py-3 text-center">1</td>
+                            <td className="py-3 text-right">{formatCurrency(svc.price, currency)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="border-t-2 border-black pt-4">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-bold uppercase">Subtotal</span>
+                      <span className="text-sm font-bold">{formatCurrency(order.subtotal, currency)}</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-bold uppercase">Tax ({taxRate}%)</span>
+                      <span className="text-sm font-bold">{formatCurrency(order.tax, currency)}</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="text-lg font-black uppercase">Total</span>
+                      <span className="text-lg font-black">{formatCurrency(order.total, currency)}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 text-center border-t border-zinc-100 pt-4">
+                    <p className="text-[10px] text-zinc-400 font-medium">Thank you for your business. Stay fresh!</p>
+                  </div>
                 </div>
 
-                <div className="border-t-2 border-black pt-4">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-bold uppercase">Subtotal</span>
-                    <span className="text-sm font-bold">{formatCurrency(invoiceOrder.subtotal, currency)}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-bold uppercase">Tax ({taxRate}%)</span>
-                    <span className="text-sm font-bold">{formatCurrency(invoiceOrder.tax, currency)}</span>
-                  </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-lg font-black uppercase">Total</span>
-                    <span className="text-lg font-black">{formatCurrency(invoiceOrder.total, currency)}</span>
-                  </div>
+                <div className="p-4 bg-muted border-t border-border flex gap-3">
+                  <button 
+                    onClick={() => setInvoiceOrder(null)}
+                    className="flex-1 px-4 py-2 bg-background text-foreground rounded-md text-sm font-medium hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    Close
+                  </button>
+                  <button 
+                    onClick={() => {
+                      window.print();
+                    }}
+                    className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Download className="h-4 w-4" /> Download PDF
+                  </button>
                 </div>
-
-                <div className="mt-8 text-center border-t border-zinc-100 pt-4">
-                  <p className="text-[10px] text-zinc-400 font-medium">Thank you for your business. Stay fresh!</p>
-                </div>
-              </div>
-
-              <div className="p-4 bg-muted border-t border-border flex gap-3">
-                <button 
-                  onClick={() => setInvoiceOrder(null)}
-                  className="flex-1 px-4 py-2 bg-background text-foreground rounded-md text-sm font-medium hover:bg-muted transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
-                <button 
-                  onClick={() => {
-                    window.print();
-                  }}
-                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Download className="h-4 w-4" /> Download PDF
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
+              </motion.div>
+            </div>
+          );
+        })()}
       </AnimatePresence>
     </div>
   );
