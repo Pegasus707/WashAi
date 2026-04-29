@@ -1,26 +1,195 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #000000; /* Pure Black */
+  --foreground: #F2F2F2; /* Soft White */
+  
+  --card: #0A0A0A; /* Very Dark Gray */
+  --card-foreground: #F2F2F2;
+  
+  --popover: #0A0A0A;
+  --popover-foreground: #F2F2F2;
+  
+  --primary: #ffffff; /* High contrast white for primary actions */
+  --primary-foreground: #000000;
+  
+  --secondary: #1A1A1A;
+  --secondary-foreground: #F2F2F2;
+  
+  --muted: #1A1A1A;
+  --muted-foreground: #B3B3B3; /* Brighter gray for high legibility */
+  
+  --accent: #1A1A1A;
+  --accent-foreground: #F2F2F2;
+  
+  --destructive: #7f1d1d;
+  --destructive-foreground: #fafafa;
+  
+  --border: #222222; /* Crisp, solid borders */
+  
+  --input: #1A1A1A;
+  
+  --ring: #444444;
+  
+  --radius: 0.5rem; /* Sharper corners */
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+  }
+  
+  /* Global Interactive Transitions - Forced priority */
+  button, a {
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease !important;
+  }
+
+  /* Solid Color Fill on Hover for Tabs/Buttons */
+  button:hover:not(:disabled), a:hover {
+    background-color: rgba(37, 99, 235, 0.15) !important; /* Low opacity blue tint */
+    color: #60a5fa !important; /* Bright blue text to match */
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1) !important;
+  }
+
+  /* Deep Color Tint on Click */
+  button:active:not(:disabled), a:active {
+    transform: scale(0.96) !important;
+    background-color: rgba(37, 99, 235, 0.25) !important; /* Slightly darker translucent blue on click */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
+  }
+
+  /* Subtle highlight on focus for inputs */
+  input, select, textarea {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    background-color: rgba(37, 99, 235, 0.05) !important; /* Very subtle blue tint inside input */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+@layer utilities {
+  .glass {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  
+  .glass-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5); 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Professional subtle background tint on Panel Hover, NO BORDER COLOR */
+  .glass-panel:hover {
+    background-color: #111111 !important; /* Just a slight background shift for cards, no blue border */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.8) !important;
+  }
+
+  /* Professional Print Styles */
+  @media print {
+    @page {
+      margin: 1.5cm;
+      size: A4 portrait;
+    }
+
+    body {
+      background: white !important;
+      color: black !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Hide UI Elements */
+    aside, header, nav, [data-sonner-toaster], button, [role="button"], .no-print {
+      display: none !important;
+    }
+
+    /* Override dark mode text */
+    * {
+      color: black !important;
+      text-shadow: none !important;
+    }
+
+    /* Preserve essential colors and backgrounds */
+    .bg-primary\/10 { background-color: rgba(59, 130, 246, 0.1) !important; }
+    .bg-emerald-500\/10 { background-color: rgba(16, 185, 129, 0.1) !important; }
+    .bg-rose-500\/10 { background-color: rgba(244, 63, 94, 0.1) !important; }
+    .bg-amber-500\/10 { background-color: rgba(245, 158, 11, 0.1) !important; }
+    
+    .text-primary { color: #3b82f6 !important; }
+    .text-emerald-500 { color: #10b981 !important; }
+    .text-rose-500 { color: #f43f5e !important; }
+    .text-amber-500 { color: #f59e0b !important; }
+    .text-muted-foreground { color: #52525b !important; }
+
+    /* Expand main content */
+    main {
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+    }
+
+    /* Ensure glass panels look like clean boxes on paper */
+    .glass-panel {
+      background: white !important;
+      border: 1px solid #e4e4e7 !important;
+      box-shadow: none !important;
+      color: black !important;
+      break-inside: avoid;
+      margin-bottom: 20px;
+    }
+
+    /* Specifically for the chart container */
+    .recharts-wrapper {
+      background: white !important;
+    }
+
+    /* Remove interactive borders and glows */
+    input, select, textarea {
+      border: 1px solid #e4e4e7 !important;
+      background: white !important;
+      color: black !important;
+    }
+  }
 }
