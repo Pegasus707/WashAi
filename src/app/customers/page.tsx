@@ -131,16 +131,16 @@ export default function Customers() {
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto pb-12">
-      <div className="flex justify-between items-end border-b border-border/50 pb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-border/50 pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Customer Directory</h1>
-          <p className="text-muted-foreground text-sm">Manage your client base and view historical spending habits.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 md:mb-2">Customer Directory</h1>
+          <p className="text-muted-foreground text-xs md:text-sm">Manage your client base and view historical spending habits.</p>
         </div>
         <button 
           onClick={() => setIsRegisterOpen(true)}
-          className="bg-primary text-primary-foreground px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-md flex items-center gap-2 cursor-pointer"
+          className="w-full sm:w-auto bg-primary text-primary-foreground px-5 py-3 rounded-xl text-xs md:text-sm font-black uppercase tracking-widest hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
         >
-          <UserPlus className="h-4 w-4" /> Register Customer
+          <UserPlus className="h-4 w-4" /> Register
         </button>
       </div>
 
@@ -165,23 +165,23 @@ export default function Customers() {
       </div>
 
       {/* Search & Filter */}
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-        <div className="relative max-w-md flex-1 w-full">
-          <Search className="absolute left-4 top-3 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col gap-4">
+        <div className="relative w-full">
+          <Search className="absolute left-4 top-3.5 h-4 w-4 text-muted-foreground" />
           <input 
             type="text" 
-            placeholder="Search by name or phone..." 
+            placeholder="Search name or phone..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-background border border-border rounded-xl pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full bg-background border border-border rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
           />
         </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide w-full md:w-auto">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide w-full">
             {['All', 'Active', 'Inactive', 'VIP'].map(status => (
                 <button
                     key={status}
                     onClick={() => setFilterStatus(status)}
-                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border cursor-pointer ${
+                    className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border cursor-pointer whitespace-nowrap ${
                         filterStatus === status 
                         ? 'bg-primary text-primary-foreground border-primary' 
                         : 'bg-muted/50 text-muted-foreground border-border hover:bg-muted'
@@ -194,7 +194,7 @@ export default function Customers() {
       </div>
 
       {/* Customers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
         {filteredCustomers.map((customer, i) => (
           <motion.div
             key={customer.id}
@@ -205,34 +205,34 @@ export default function Customers() {
                 setSelectedCustomer(customer);
                 setIsEditMode(false);
             }}
-            className="glass-panel p-6 rounded-2xl border border-border/50 hover:border-primary/50 transition-all cursor-pointer group flex flex-col"
+            className="glass-panel p-5 md:p-6 rounded-2xl border border-border/50 hover:border-primary/50 transition-all cursor-pointer group flex flex-col shadow-sm"
           >
-            <div className="flex justify-between items-start mb-6">
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+            <div className="flex justify-between items-start mb-4 md:mb-6">
+              <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-xs md:text-sm">
                 {customer.name.charAt(0)}
               </div>
-              <div className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest ${
+              <div className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] md:text-[10px] font-bold uppercase tracking-widest ${
                 customer.status === 'VIP' ? 'bg-amber-500/10 text-amber-500' : 
                 customer.status === 'Inactive' ? 'bg-rose-500/10 text-rose-500' : 
                 'bg-emerald-500/10 text-emerald-500'
               }`}>
-                {customer.status === "VIP" && <Star className="h-3 w-3 fill-amber-500" />} {customer.status}
+                {customer.status === "VIP" && <Star className="h-2.5 w-2.5 fill-amber-500" />} {customer.status}
               </div>
             </div>
             
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-1">{customer.name}</h3>
-              <p className="text-xs text-muted-foreground flex items-center gap-1.5 mb-1"><Phone className="h-3 w-3" /> {customer.phone}</p>
+              <h3 className="text-base md:text-lg font-black text-foreground group-hover:text-primary transition-colors mb-1">{customer.name}</h3>
+              <p className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1.5 mb-1"><Phone className="h-3 w-3" /> {customer.phone}</p>
             </div>
 
-            <div className="flex justify-between items-end pt-4 mt-4 border-t border-border/50">
+            <div className="flex justify-between items-end pt-3 mt-3 md:pt-4 md:mt-4 border-t border-border/50">
               <div>
-                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-0.5">Total Spent</p>
-                <p className="text-sm font-bold text-emerald-500">{formatCurrency(customer.totalSpent, currency)}</p>
+                <p className="text-[9px] uppercase font-black text-muted-foreground tracking-widest mb-0.5">Spent</p>
+                <p className="text-xs md:text-sm font-black text-emerald-500">{formatCurrency(customer.totalSpent, currency)}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-0.5">Orders</p>
-                <p className="text-sm font-bold">{customer.totalOrders}</p>
+                <p className="text-[9px] uppercase font-black text-muted-foreground tracking-widest mb-0.5">Orders</p>
+                <p className="text-xs md:text-sm font-black">{customer.totalOrders}</p>
               </div>
             </div>
           </motion.div>

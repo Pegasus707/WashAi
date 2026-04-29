@@ -102,36 +102,30 @@ export default function LogisticsHub() {
       </div>
 
       {/* Modern Fleet Overview */}
-      <div className="glass-panel p-6 rounded-3xl flex flex-col md:flex-row gap-8 items-center border-border/30">
-        <div className="flex flex-col items-center justify-center px-8 border-r border-border/50">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Active Fleet</p>
+      <div className="glass-panel p-4 md:p-6 rounded-3xl flex flex-col lg:flex-row gap-6 md:gap-8 items-center border-border/30">
+        <div className="flex flex-col items-center justify-center px-4 lg:px-8 lg:border-r border-border/50 w-full lg:w-auto">
+          <p className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-widest mb-1 md:mb-2">Active Fleet</p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-5xl font-black text-primary">{drivers.filter(d => d.status === 'Online').length}</h3>
-            <span className="text-xl text-muted-foreground font-medium">/ {drivers.length}</span>
+            <h3 className="text-3xl md:text-5xl font-black text-primary">{drivers.filter(d => d.status === 'Online').length}</h3>
+            <span className="text-lg md:text-xl text-muted-foreground font-bold">/ {drivers.length}</span>
           </div>
         </div>
         
-        <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
           {drivers.map(driver => (
-            <div key={driver.id} className="p-4 rounded-2xl bg-background border border-border/50 hover:border-primary/30 transition-all flex flex-col gap-3">
+            <div key={driver.id} className="p-3 md:p-4 rounded-2xl bg-background border border-border/50 hover:border-primary/30 transition-all flex flex-col gap-2 md:gap-3">
               <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center ${driver.status === 'Online' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-muted text-muted-foreground'}`}>
-                    <UserCircle className="h-6 w-6" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className={`h-8 w-8 md:h-10 md:w-10 rounded-full flex items-center justify-center ${driver.status === 'Online' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-muted text-muted-foreground'}`}>
+                    <UserCircle className="h-5 w-5 md:h-6 md:w-6" />
                   </div>
                   <div>
-                    <span className="font-bold text-sm block">{driver.name}</span>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className={`h-2 w-2 rounded-full ${driver.status === 'Online' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : driver.status === 'On Break' ? 'bg-amber-500' : 'bg-muted-foreground'}`} title={driver.status} />
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{driver.status}</span>
+                    <span className="font-bold text-xs md:text-sm block">{driver.name}</span>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className={`h-1.5 w-1.5 rounded-full ${driver.status === 'Online' ? 'bg-emerald-500' : driver.status === 'On Break' ? 'bg-amber-500' : 'bg-muted-foreground'}`} />
+                      <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase font-black tracking-wider">{driver.status}</span>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="flex justify-between items-end border-t border-border/50 pt-2 mt-1">
-                <p className="text-xs font-medium"><span className="text-muted-foreground">Loads:</span> {driver.activeDeliveries}</p>
-                <div className="text-xs text-amber-500 font-bold flex items-center gap-1">
-                  ★ {driver.rating}
                 </div>
               </div>
             </div>
@@ -140,59 +134,59 @@ export default function LogisticsHub() {
       </div>
 
       {/* Kanban Board */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-full min-h-[500px] mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 h-full min-h-[500px] mt-4">
         {/* Pending Column */}
-        <div className="flex flex-col gap-5 bg-muted/10 p-6 rounded-[2rem] border border-border/30">
-          <div className="flex justify-between items-center mb-2 px-1">
-            <h3 className="font-bold text-sm uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+        <div className="flex flex-col gap-4 md:gap-5 bg-muted/10 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-border/30">
+          <div className="flex justify-between items-center mb-1 md:mb-2 px-1">
+            <h3 className="font-black text-[10px] md:text-sm uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-amber-500" /> Pending
             </h3>
-            <span className="bg-amber-500/10 text-amber-500 text-xs font-black px-3 py-1 rounded-full">{pending.length}</span>
+            <span className="bg-amber-500/10 text-amber-500 text-[10px] font-black px-2.5 py-1 rounded-full">{pending.length}</span>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto pb-4 custom-scrollbar">
+          <div className="flex flex-col gap-3 md:gap-4 overflow-y-auto pb-4 custom-scrollbar">
             {pending.map(d => <DeliveryCard key={d.id} delivery={d} />)}
             {pending.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed border-border/50 rounded-2xl">
-                    <AlertCircle className="h-8 w-8 mb-3 opacity-20" />
-                    <p className="text-xs font-bold uppercase tracking-widest">No pending runs</p>
+                <div className="flex flex-col items-center justify-center py-10 md:py-12 text-muted-foreground border-2 border-dashed border-border/50 rounded-2xl">
+                    <AlertCircle className="h-6 w-6 md:h-8 md:w-8 mb-2 md:mb-3 opacity-20" />
+                    <p className="text-[10px] font-black uppercase tracking-widest">No pending runs</p>
                 </div>
             )}
           </div>
         </div>
 
         {/* In Transit Column */}
-        <div className="flex flex-col gap-5 bg-primary/5 p-6 rounded-[2rem] border border-primary/10">
-          <div className="flex justify-between items-center mb-2 px-1">
-            <h3 className="font-bold text-sm uppercase tracking-widest flex items-center gap-2 text-primary">
-              <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)]" /> In Transit
+        <div className="flex flex-col gap-4 md:gap-5 bg-primary/5 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-primary/10">
+          <div className="flex justify-between items-center mb-1 md:mb-2 px-1">
+            <h3 className="font-black text-[10px] md:text-sm uppercase tracking-widest flex items-center gap-2 text-primary">
+              <span className="h-2 w-2 rounded-full bg-primary" /> In Transit
             </h3>
-            <span className="bg-primary text-primary-foreground text-xs font-black px-3 py-1 rounded-full">{inTransit.length}</span>
+            <span className="bg-primary text-primary-foreground text-[10px] font-black px-2.5 py-1 rounded-full">{inTransit.length}</span>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto pb-4 custom-scrollbar">
+          <div className="flex flex-col gap-3 md:gap-4 overflow-y-auto pb-4 custom-scrollbar">
             {inTransit.map(d => <DeliveryCard key={d.id} delivery={d} />)}
             {inTransit.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed border-border/50 rounded-2xl">
-                    <Truck className="h-8 w-8 mb-3 opacity-20" />
-                    <p className="text-xs font-bold uppercase tracking-widest">Fleet is idle</p>
+                <div className="flex flex-col items-center justify-center py-10 md:py-12 text-muted-foreground border-2 border-dashed border-border/50 rounded-2xl">
+                    <Truck className="h-6 w-6 md:h-8 md:w-8 mb-2 md:mb-3 opacity-20" />
+                    <p className="text-[10px] font-black uppercase tracking-widest">Fleet is idle</p>
                 </div>
             )}
           </div>
         </div>
 
         {/* Completed Column */}
-        <div className="flex flex-col gap-5 bg-muted/5 p-6 rounded-[2rem] border border-border/30 opacity-70 hover:opacity-100 transition-opacity">
-          <div className="flex justify-between items-center mb-2 px-1">
-            <h3 className="font-bold text-sm uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+        <div className="flex flex-col gap-4 md:gap-5 bg-muted/5 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-border/30">
+          <div className="flex justify-between items-center mb-1 md:mb-2 px-1">
+            <h3 className="font-black text-[10px] md:text-sm uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-emerald-500" /> Completed
             </h3>
-            <span className="bg-emerald-500/10 text-emerald-500 text-xs font-black px-3 py-1 rounded-full">{completed.length}</span>
+            <span className="bg-emerald-500/10 text-emerald-500 text-[10px] font-black px-2.5 py-1 rounded-full">{completed.length}</span>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto pb-4 custom-scrollbar">
+          <div className="flex flex-col gap-3 md:gap-4 overflow-y-auto pb-4 custom-scrollbar">
             {completed.map(d => <DeliveryCard key={d.id} delivery={d} />)}
             {completed.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed border-border/50 rounded-2xl">
-                    <CheckCircle2 className="h-8 w-8 mb-3 opacity-20" />
-                    <p className="text-xs font-bold uppercase tracking-widest">No runs finished</p>
+                <div className="flex flex-col items-center justify-center py-10 md:py-12 text-muted-foreground border-2 border-dashed border-border/50 rounded-2xl">
+                    <CheckCircle2 className="h-6 w-6 md:h-8 md:w-8 mb-2 md:mb-3 opacity-20" />
+                    <p className="text-[10px] font-black uppercase tracking-widest">No runs finished</p>
                 </div>
             )}
           </div>

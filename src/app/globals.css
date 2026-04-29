@@ -75,33 +75,46 @@
   
   /* Global Interactive Transitions - Forced priority */
   button, a {
-    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease !important;
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease !important;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Solid Color Fill on Hover for Tabs/Buttons */
   button:hover:not(:disabled), a:hover {
-    background-color: rgba(37, 99, 235, 0.15) !important; /* Low opacity blue tint */
-    color: #60a5fa !important; /* Bright blue text to match */
-    border-color: transparent !important;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
   }
 
   /* Deep Color Tint on Click */
   button:active:not(:disabled), a:active {
-    transform: scale(0.96) !important;
-    background-color: rgba(37, 99, 235, 0.25) !important; /* Slightly darker translucent blue on click */
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
+    transform: scale(0.97) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
   }
 
-  /* Subtle highlight on focus for inputs */
-  input, select, textarea {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Global Scrollbar Refinement */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
   }
 
-  input:focus, select:focus, textarea:focus {
-    border-color: rgba(255, 255, 255, 0.2) !important;
-    background-color: rgba(37, 99, 235, 0.05) !important; /* Very subtle blue tint inside input */
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+  }
+
+  /* Mobile-first focal scroll for tables */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
   }
 }
 

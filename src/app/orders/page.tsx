@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Search, Filter, MoreHorizontal, CheckCircle, Printer, Trash2, Edit2, Receipt, Download } from "lucide-react";
 import { useStore, OrderStatus, Order } from "@/store/useStore";
 import { useState, useMemo, useEffect, useRef } from "react";
@@ -13,6 +14,7 @@ export default function Orders() {
   const deleteOrder = useStore((state) => state.deleteOrder);
   const currency = useStore((state) => state.settings.currency);
   const taxRate = useStore((state) => state.settings.taxRate);
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -139,54 +141,59 @@ export default function Orders() {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto" ref={dropdownRef}>
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
+        {/* Table Container with Horizontal Scroll */}
+        <div className="overflow-x-auto relative scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent" ref={dropdownRef}>
+          <table className="w-full text-sm text-left border-collapse">
+            <thead className="text-[10px] text-muted-foreground uppercase bg-muted/30 sticky top-0 z-20">
               <tr>
-                <th className="px-6 py-3 font-medium">Order ID</th>
-                <th className="px-6 py-3 font-medium">Customer</th>
-                <th className="px-6 py-3 font-medium">Items</th>
-                <th className="px-6 py-3 font-medium">Status</th>
-                <th className="px-6 py-3 font-medium">Amount</th>
-                <th className="px-6 py-3 font-medium">Time</th>
-                <th className="px-6 py-3 text-right">Actions</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50">Order ID</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50">Customer</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50 hidden md:table-cell">Items</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50">Status</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50">Amount</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50 hidden lg:table-cell">Time</th>
+                <th className="px-4 md:px-6 py-4 font-black tracking-widest border-b border-border/50 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-border/30">
               {filteredOrders.map((order) => (
-                <tr key={order.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                  <td className="px-6 py-4 font-medium text-foreground">{order.id}</td>
-                  <td className="px-6 py-4">{order.customer}</td>
-                  <td className="px-6 py-4 text-muted-foreground">
+                <tr key={order.id} className="hover:bg-muted/30 transition-colors group">
+                  <td className="px-4 md:px-6 py-4 font-black text-foreground whitespace-nowrap text-xs md:text-sm">{order.id}</td>
+                  <td className="px-4 md:px-6 py-4">
+                    <div className="flex flex-col">
+                        <span className="font-bold text-xs md:text-sm">{order.customer}</span>
+                        <span className="text-[10px] text-muted-foreground md:hidden">{order.items.length} items</span>
+                    </div>
+                  </td>
+                  <td className="px-4 md:px-6 py-4 text-muted-foreground hidden md:table-cell text-xs max-w-[200px] truncate">
                     {order.items.map(it => `${it.quantity} ${it.name}`).join(', ')}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 md:px-6 py-4">
                     <select
                       value={order.status}
                       onChange={(e) => {
                         updateOrderStatus(order.id, e.target.value as OrderStatus);
-                        toast.success(`Order ${order.id} status updated to ${e.target.value}`);
+                        toast.success(`Order ${order.id} updated`);
                       }}
-                      className={`px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-colors border-none focus:ring-2 focus:ring-primary/20 focus:outline-none appearance-none ${
+                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider cursor-pointer transition-all border-none focus:ring-2 focus:ring-primary/20 appearance-none ${
                         order.status === 'Ready' ? 'bg-emerald-500/10 text-emerald-500' :
                         order.status === 'Processing' ? 'bg-amber-500/10 text-amber-500' :
                         order.status === 'Received' ? 'bg-blue-500/10 text-blue-500' :
                         'bg-muted text-muted-foreground'
                       }`}
                     >
-                      <option value="Received" className="bg-background text-foreground">Received</option>
-                      <option value="Processing" className="bg-background text-foreground">Processing</option>
-                      <option value="Ready" className="bg-background text-foreground">Ready</option>
-                      <option value="Delivered" className="bg-background text-foreground">Delivered</option>
+                      <option value="Received">Received</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Ready">Ready</option>
+                      <option value="Delivered">Delivered</option>
                     </select>
                   </td>
-                  <td className="px-6 py-4 font-medium">{formatCurrency(order.total, currency)}</td>
-                  <td className="px-6 py-4 text-muted-foreground text-xs">{order.time}</td>
-                  <td className="px-6 py-4 text-right relative">
+                  <td className="px-4 md:px-6 py-4 font-black text-xs md:text-sm whitespace-nowrap">{formatCurrency(order.total, currency)}</td>
+                  <td className="px-4 md:px-6 py-4 text-muted-foreground text-[10px] hidden lg:table-cell uppercase font-bold">{order.time}</td>
+                  <td className="px-4 md:px-6 py-4 text-right relative">
                     <button 
                       onClick={() => setActiveDropdown(activeDropdown === order.id ? null : order.id)}
-                      className="p-1 hover:bg-muted rounded text-muted-foreground cursor-pointer"
+                      className="p-2 hover:bg-muted rounded-xl text-muted-foreground transition-colors cursor-pointer"
                     >
                       <MoreHorizontal className="h-4 w-4" />
                     </button>
@@ -197,32 +204,32 @@ export default function Orders() {
                           initial={{ opacity: 0, scale: 0.95, y: -10 }}
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                          className="absolute right-8 top-8 w-48 bg-[#0A0A0A] border border-border rounded-xl shadow-2xl z-[999] overflow-hidden py-1"
+                          className="absolute right-8 top-12 w-48 bg-card border border-border rounded-xl shadow-2xl z-[50] overflow-hidden py-1 backdrop-blur-xl"
                         >
                           <button 
                             onClick={() => handleAction('edit', order)}
-                            className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
                           >
-                            <Edit2 className="h-4 w-4" /> Edit Order
+                            <Edit2 className="h-4 w-4 text-primary" /> Edit Order
                           </button>
                           <button 
                             onClick={() => handleAction('invoice', order)}
-                            className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
                           >
-                            <Receipt className="h-4 w-4" /> Generate Invoice
+                            <Receipt className="h-4 w-4 text-primary" /> Invoice
                           </button>
                           <button 
                             onClick={() => handleAction('print', order)}
-                            className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-muted flex items-center gap-2 cursor-pointer"
                           >
-                            <Printer className="h-4 w-4" /> Print Receipt
+                            <Printer className="h-4 w-4 text-primary" /> Print
                           </button>
-                          <div className="h-px bg-border/50 my-1"></div>
+                          <div className="h-px bg-border/50 mx-2 my-1"></div>
                           <button 
                             onClick={() => handleAction('delete', order)}
-                            className="w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10 flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-destructive hover:bg-destructive/10 flex items-center gap-2 cursor-pointer"
                           >
-                            <Trash2 className="h-4 w-4" /> Delete Order
+                            <Trash2 className="h-4 w-4" /> Delete
                           </button>
                         </motion.div>
                       )}
@@ -230,6 +237,9 @@ export default function Orders() {
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
               {filteredOrders.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-muted-foreground">

@@ -351,29 +351,29 @@ export default function NewOrder() {
             {/* AI Input Section */}
             <div className="relative">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-[2rem] blur-xl opacity-50 pointer-events-none" />
-              <div className="glass-panel p-3 rounded-3xl flex items-center gap-3 relative z-10 border border-primary/20 bg-background/80 backdrop-blur-xl">
-                <Sparkles className="h-6 w-6 text-primary shrink-0 ml-3" />
+              <div className="glass-panel p-2 md:p-3 rounded-[1.5rem] md:rounded-3xl flex items-center gap-2 md:gap-3 relative z-10 border border-primary/20 bg-background/80 backdrop-blur-xl">
+                <Sparkles className="h-5 w-5 md:h-6 md:w-6 text-primary shrink-0 ml-2 md:ml-3" />
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder='Dictate or type: "5 shirts, 2 heavy sarees, express delivery"'
-                  className="flex-1 bg-transparent border-none text-xl font-medium placeholder:text-muted-foreground focus:outline-none focus:ring-0 px-2"
+                  placeholder='Dictate or type: "5 shirts, 2 heavy sarees..."'
+                  className="flex-1 bg-transparent border-none text-base md:text-xl font-medium placeholder:text-muted-foreground focus:outline-none focus:ring-0 px-1 md:px-2"
                 />
                 <button 
                   onClick={handleVoiceIntake}
-                  className={`p-3 rounded-2xl transition-all cursor-pointer ${isListening ? 'bg-rose-500/20 text-rose-500 animate-pulse' : 'hover:bg-muted text-muted-foreground'}`}
+                  className={`p-2.5 md:p-3 rounded-xl md:rounded-2xl transition-all cursor-pointer ${isListening ? 'bg-rose-500/20 text-rose-500 animate-pulse' : 'hover:bg-muted text-muted-foreground'}`}
                   title="AI Voice Intake"
                 >
-                  <Mic className="h-6 w-6" />
+                  <Mic className="h-5 w-5 md:h-6 md:w-6" />
                 </button>
                 <button
                   onClick={handleAIParse}
                   disabled={isProcessing || !input.trim() || isListening}
-                  className="p-3 bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl shadow-lg hover:bg-primary/90 transition-all cursor-pointer"
+                  className="p-2.5 md:p-3 bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed rounded-xl md:rounded-2xl shadow-lg hover:bg-primary/90 transition-all cursor-pointer"
                 >
-                  {isProcessing ? <Loader2 className="h-6 w-6 animate-spin" /> : <Send className="h-6 w-6" />}
+                  {isProcessing ? <Loader2 className="h-5 w-5 md:h-6 md:w-6 animate-spin" /> : <Send className="h-5 w-5 md:h-6 md:w-6" />}
                 </button>
               </div>
             </div>
@@ -500,20 +500,20 @@ export default function NewOrder() {
                   </div>
 
                   {/* Items Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-4">
                     {INVENTORY_CATEGORIES.find(c => c.name === activeCategory)?.items.map(item => (
                       <motion.div
                         key={item.id}
                         layoutId={item.id}
                         onClick={() => handleAddItem(item.id)}
-                        className="bg-muted/10 p-5 rounded-2xl border border-border/50 hover:border-primary/50 hover:bg-muted/30 transition-all cursor-pointer group flex items-center justify-between gap-4 shadow-sm"
+                        className="bg-muted/10 p-4 md:p-5 rounded-2xl border border-border/50 hover:border-primary/50 hover:bg-muted/30 transition-all cursor-pointer group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm"
                       >
                         <div className="flex flex-col text-left">
-                          <p className="text-lg font-bold text-foreground leading-tight">{item.name}</p>
-                          <p className="text-sm font-black text-primary mt-1 tracking-wide">{formatCurrency(item.price, currency)}</p>
+                          <p className="text-sm md:text-lg font-bold text-foreground leading-tight">{item.name}</p>
+                          <p className="text-[10px] md:text-sm font-black text-primary mt-1 tracking-wide">{formatCurrency(item.price, currency)}</p>
                         </div>
-                        <div className="h-10 w-10 shrink-0 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:border-primary/50 group-hover:bg-primary/10 transition-colors shadow-sm">
-                            <Plus className="h-5 w-5" />
+                        <div className="h-8 w-8 md:h-10 md:w-10 shrink-0 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:border-primary/50 group-hover:bg-primary/10 transition-colors shadow-sm ml-auto sm:ml-0">
+                            <Plus className="h-4 w-4 md:h-5 md:w-5" />
                         </div>
                       </motion.div>
                     ))}

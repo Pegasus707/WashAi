@@ -116,18 +116,24 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-6 w-full pb-8">
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/50 pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-1">Dashboard</h1>
-          <p className="text-muted-foreground text-sm">Welcome back. Here's what's happening today.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Dashboard</h1>
+          <p className="text-muted-foreground text-xs md:text-sm">Welcome back. Here's what's happening today.</p>
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <p className="text-2xl font-black font-mono tracking-tighter text-primary">
-            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+        <div className="flex items-center gap-3 bg-muted/30 px-4 py-2 rounded-2xl border border-border/50">
+          <p className="text-xl md:text-2xl font-black font-mono tracking-tighter text-primary">
+            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
           </p>
-          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest bg-muted px-2 py-0.5 rounded">
-            {currentTime.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
-          </p>
+          <div className="w-px h-8 bg-border" />
+          <div className="flex flex-col">
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">
+              {currentTime.toLocaleDateString([], { weekday: 'short' })}
+            </p>
+            <p className="text-[10px] font-bold text-foreground leading-none mt-1">
+              {currentTime.toLocaleDateString([], { month: 'short', day: 'numeric' })}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -156,7 +162,7 @@ export default function Dashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {[
           { title: "Store Earnings", value: formatCurrency(totalRevenue + 142000, currency), icon: DollarSign, trend: "+12.5%", isUp: true },
           { title: "Active Orders", value: orders.length.toString(), icon: Package, trend: "+5.2%", isUp: true },
@@ -168,20 +174,19 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="glass-panel p-5 rounded-xl flex flex-col justify-between"
+            className="glass-panel p-4 md:p-5 rounded-xl md:rounded-2xl flex flex-col justify-between border border-border/50"
           >
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                <kpi.icon className="h-5 w-5" />
+            <div className="flex justify-between items-start mb-3 md:mb-4">
+              <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg text-primary">
+                <kpi.icon className="h-4 w-4 md:h-5 md:w-5" />
               </div>
-              <div className={`flex items-center text-xs font-medium px-2 py-1 rounded-full ${kpi.isUp ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                {kpi.isUp ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingUp className="h-3 w-3 mr-1 transform rotate-180" />}
+              <div className={`flex items-center text-[10px] md:text-xs font-bold px-1.5 md:px-2 py-0.5 md:py-1 rounded-full ${kpi.isUp ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
                 {kpi.trend}
               </div>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground font-medium mb-1">{kpi.title}</p>
-              <h3 className="text-2xl lg:text-3xl font-bold tracking-tight">{kpi.value}</h3>
+              <p className="text-[10px] md:text-sm text-muted-foreground font-bold uppercase tracking-widest mb-1">{kpi.title}</p>
+              <h3 className="text-lg md:text-2xl lg:text-3xl font-black tracking-tighter">{kpi.value}</h3>
             </div>
           </motion.div>
         ))}

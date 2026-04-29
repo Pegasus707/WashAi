@@ -44,18 +44,18 @@ export default function Insights() {
   };
 
   return (
-    <div className="flex flex-col gap-10 w-full max-w-5xl mx-auto pb-12">
-      <div className="flex justify-between items-end border-b border-border/50 pb-6">
+    <div className="flex flex-col gap-6 md:gap-10 w-full max-w-5xl mx-auto pb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/50 pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Executive Insights</h1>
-          <p className="text-muted-foreground text-sm">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Executive Insights</h1>
+          <p className="text-muted-foreground text-xs md:text-sm">
             High-level overview of your business performance.
           </p>
         </div>
         <button 
           onClick={handleExport}
           disabled={isExporting}
-          className="bg-primary text-primary-foreground px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-primary/90 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-70"
+          className="w-full sm:w-auto bg-primary text-primary-foreground px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest shadow-md hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
         >
           {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
           Export Report
@@ -63,7 +63,7 @@ export default function Insights() {
       </div>
 
       {/* Top Level Telemetry */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {[
           { title: "Customer LTV", value: formatCurrency(18450, currency), sub: "+12% vs last month", icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Avg Order Value", value: formatCurrency(avgOrderValue, currency), sub: "Optimized via WashAI", icon: TrendingUp, color: "text-primary", bg: "bg-primary/10" },
@@ -74,17 +74,17 @@ export default function Insights() {
             initial={{ opacity: 0, y: 10 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ delay: i * 0.1 }}
-            className="bg-background border border-border p-6 rounded-[2rem] flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
+            className="bg-background border border-border p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
           >
-            <div className="flex justify-between items-start mb-8">
-              <div className={`p-3 rounded-2xl ${metric.bg} ${metric.color}`}>
-                <metric.icon className="h-6 w-6" />
+            <div className="flex justify-between items-start mb-6 md:mb-8">
+              <div className={`p-2.5 md:p-3 rounded-2xl ${metric.bg} ${metric.color}`}>
+                <metric.icon className="h-5 w-5 md:h-6 md:w-6" />
               </div>
             </div>
             <div>
-              <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-1">{metric.title}</p>
-              <h3 className="text-4xl font-black tracking-tight mb-2">{metric.value}</h3>
-              <p className="text-xs font-medium text-emerald-500">{metric.sub}</p>
+              <p className="text-[10px] md:text-sm font-black text-muted-foreground uppercase tracking-widest mb-1">{metric.title}</p>
+              <h3 className="text-2xl md:text-4xl font-black tracking-tight mb-1 md:mb-2">{metric.value}</h3>
+              <p className="text-[10px] md:text-xs font-bold text-emerald-500">{metric.sub}</p>
             </div>
           </motion.div>
         ))}
