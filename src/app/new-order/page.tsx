@@ -7,7 +7,6 @@ import { useStore, Order } from "@/store/useStore";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/currency";
-import confetti from "canvas-confetti";
 import { hapticFeedback } from "@/lib/utils";
 
 type OrderMode = "ai" | "manual";
@@ -211,16 +210,9 @@ export default function NewOrder() {
     }
     
     hapticFeedback('success');
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ffffff', '#3b82f6', '#000000']
-    });
-
     setTimeout(() => {
       router.push("/orders");
-    }, 1500);
+    }, 1000);
   };
 
   // --- Manual Logic ---
@@ -308,16 +300,10 @@ export default function NewOrder() {
     }
 
     hapticFeedback('success');
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ffffff', '#3b82f6', '#000000']
-    });
     
     setTimeout(() => {
       router.push("/orders");
-    }, 1500);
+    }, 1000);
   };
 
   return (
