@@ -466,7 +466,7 @@ export default function NewOrder() {
 
             {/* Right Column: Checkout Basket */}
             <div className="lg:col-span-4 flex flex-col">
-              <div className="glass-panel p-6 rounded-3xl border border-border sticky top-6 flex flex-col h-[calc(100vh-8rem)]">
+              <div className="glass-panel p-4 md:p-6 rounded-3xl border border-border lg:sticky lg:top-6 flex flex-col lg:h-[calc(100vh-8rem)]">
                 
                 <div className="border-b border-border/50 pb-5 mb-5 flex flex-col gap-4">
                     <div className="flex justify-between items-center">

@@ -1,14 +1,16 @@
 "use client";
 
-import { Search, Sparkles, Bell, User } from "lucide-react";
+import { Search, Sparkles, Bell, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useStore } from "@/store/useStore";
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const { isSidebarOpen, toggleSidebar } = useStore();
 
   const handleSearch = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && searchQuery.trim()) {
@@ -27,7 +29,13 @@ export function Header() {
   };
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-4 border-b border-border/50 bg-background/60 px-6 backdrop-blur-xl z-10 sticky top-0">
+    <header className="flex h-16 shrink-0 items-center gap-4 border-b border-border/50 bg-background/60 px-4 md:px-6 backdrop-blur-xl z-30 sticky top-0">
+      <button 
+        onClick={toggleSidebar}
+        className="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+      >
+        {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+      </button>
       <div className="flex flex-1 items-center gap-4">
         {/* Standard Search */}
         <div className="relative w-full max-w-md hidden md:block">

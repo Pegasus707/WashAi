@@ -169,7 +169,7 @@ export default function Dashboard() {
           </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
         {/* Chart */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -177,11 +177,11 @@ export default function Dashboard() {
           transition={{ delay: 0.3 }}
           className="lg:col-span-2 flex flex-col gap-6"
         >
-          <div className="glass-panel p-6 rounded-xl flex flex-col flex-1">
-            <div className="flex justify-between items-center mb-6">
+          <div className="glass-panel p-4 md:p-6 rounded-xl flex flex-col flex-1">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <h3 className="font-semibold text-lg">Revenue Overview</h3>
               <select 
-                className="bg-background border border-border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+                className="w-full sm:w-auto bg-background border border-border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
                 value={timeFilter}
                 onChange={(e) => {
                   setTimeFilter(e.target.value);
@@ -194,7 +194,7 @@ export default function Dashboard() {
                 <option value="This Year">This Year</option>
               </select>
             </div>
-            <div className="flex-1 min-h-[300px] w-full">
+            <div className="flex-1 min-h-[250px] md:min-h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={currentChartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                   <defs>
@@ -223,23 +223,23 @@ export default function Dashboard() {
           </div>
           
           {/* Quick Stats Row */}
-          <div className="grid grid-cols-2 gap-6">
-             <div className="p-6 rounded-2xl bg-muted/20 flex items-center justify-between group cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => router.push('/orders')}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+             <div className="p-4 md:p-6 rounded-2xl bg-muted/20 flex items-center justify-between group cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => router.push('/orders')}>
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Items Processed</p>
-                  <p className="text-3xl font-black">423</p>
+                  <p className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Items Processed</p>
+                  <p className="text-2xl md:text-3xl font-black">423</p>
                 </div>
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <Receipt className="h-6 w-6" />
+                <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <Receipt className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
              </div>
-             <div className="p-6 rounded-2xl bg-muted/20 flex items-center justify-between group cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => router.push('/insights')}>
+             <div className="p-4 md:p-6 rounded-2xl bg-muted/20 flex items-center justify-between group cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => router.push('/insights')}>
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Avg Order Value</p>
-                  <p className="text-3xl font-black">{formatCurrency(totalRevenue / (orders.length || 1), currency)}</p>
+                  <p className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Avg Order Value</p>
+                  <p className="text-2xl md:text-3xl font-black">{formatCurrency(totalRevenue / (orders.length || 1), currency)}</p>
                 </div>
-                <div className="h-12 w-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
-                  <TrendingUp className="h-6 w-6" />
+                <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                  <TrendingUp className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
              </div>
           </div>

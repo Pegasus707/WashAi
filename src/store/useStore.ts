@@ -83,6 +83,9 @@ interface StoreState {
   updateSettings: (settings: Partial<AppSettings>) => void;
   updateDeliveryStatus: (id: string, status: DeliveryStatus) => void;
   assignDriver: (deliveryId: string, driverId: string) => void;
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+  setSidebarOpen: (open: boolean) => void;
 }
 
 const initialOrders: Order[] = [
@@ -207,5 +210,8 @@ export const useStore = create<StoreState>((set) => ({
         return drv;
       })
     };
-  })
+  }),
+  isSidebarOpen: false,
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  setSidebarOpen: (open) => set({ isSidebarOpen: open })
 }));
